@@ -2,6 +2,12 @@ import os
 import tempfile
 import streamlit as st
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.append(PROJECT_ROOT)
+    
 from src.ingest import load_and_split_pdfs, build_vector_store
 from src.llm import get_llm
 from src.rag_pipeline import answer_question, render_answer_with_sources
