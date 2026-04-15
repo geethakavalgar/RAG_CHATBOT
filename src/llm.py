@@ -5,7 +5,7 @@ from .config import GENERATION_MODEL_NAME, MAX_NEW_TOKENS
 
 def get_llm():
     generator = pipeline(
-        "text2text-generation",
+        "text-generation",
         model=GENERATION_MODEL_NAME,
         max_new_tokens=MAX_NEW_TOKENS
     )
