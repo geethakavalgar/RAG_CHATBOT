@@ -3,7 +3,6 @@ from typing import List, Tuple
 from .config import TOP_K
 from .utils import format_sources
 
-
 def generate_answer(tokenizer, model, prompt: str) -> str:
     inputs = tokenizer(
         prompt,
@@ -16,13 +15,12 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
         **inputs,
         max_new_tokens=80,
         do_sample=False,
-        repetition_penalty=1.25,
+        repetition_penalty=1.2,
         no_repeat_ngram_size=3
     )
 
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
     return answer
-
 
 def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
     tokenizer, model = llm
@@ -37,8 +35,10 @@ def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
 
     Explain clearly what the document is about in one short sentence.
 
-    Be specific. Do NOT just say "document".
-    Use important details like names, amounts, or purpose.
+    Be specific.
+    Do NOT just say "document".
+    Use important details like names, amounts, dates, or purpose when they are present.
+    Do not invent anything that is not in the text.
 
     Document text:
     {context}
@@ -51,11 +51,10 @@ def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
 
     answer = generate_answer(tokenizer, model, prompt)
 
-    if not answer or len(answer) < 5:
+    if not answer or len(answer.strip()) < 5 or answer.strip().lower() == "document":
         answer = "The document content is unclear."
 
     return answer, docs
-
 
 def render_answer_with_sources(answer: str, docs: List) -> str:
     return f"{answer}\n\nSources:\n{format_sources(docs)}"
