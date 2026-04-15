@@ -1,7 +1,6 @@
 from typing import List, Tuple
 
 from .config import TOP_K, MAX_NEW_TOKENS
-from .prompts import build_prompt
 from .utils import format_sources
 
 
@@ -24,31 +23,33 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
     return answer
 
-def answer_question(vector_store, llm, question):
-    docs = vector_store.similarity_search(question, k=3)
+
+def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
+    tokenizer, model = llm
+    docs = vector_store.similarity_search(question, k=TOP_K)
     context = "\n\n".join(doc.page_content for doc in docs)
-    context = context[:800]
+    context = context[:1000]
 
-    # Special handling for "what is this about"
-    if "what is" in question.lower() and "pdf" in question.lower():
-        answer = summarize_context(context)
-    else:
-        answer = summarize_context(context)
+    prompt = f"""
+Answer the user's question using only the document text below.
 
+Rules:
+- Answer in 1 short sentence
+- Do not copy the document word-for-word
+- If the answer is unclear, give the best concise summary
+
+Document text:
+{context}
+
+Question:
+{question}
+
+Answer:
+""".strip()
+
+    answer = generate_answer(tokenizer, model, prompt)
     return answer, docs
 
-def summarize_context(context: str) -> str:
-    lines = context.split("\n")
 
-    # pick important-looking lines
-    important = []
-    for line in lines:
-        line = line.strip()
-        if len(line) > 20:
-            important.append(line)
-
-    # return first 2–3 meaningful lines
-    return " ".join(important[:3])
-    
 def render_answer_with_sources(answer: str, docs: List) -> str:
     return f"{answer}\n\nSources:\n{format_sources(docs)}"
