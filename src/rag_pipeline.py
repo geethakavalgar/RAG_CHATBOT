@@ -33,24 +33,21 @@ def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
     context = context[:700]
 
     prompt = f"""
-Read the document text and answer the question briefly.
+    Look at the document text and answer the question.
 
-Instructions:
-- Answer in one short sentence.
-- Use your own words.
-- Do not repeat the document text.
-- Do not invent details.
-- If the question asks what the PDF is about, say what kind of document it is and its main purpose.
-- If the answer cannot be determined, say: The document content is unclear.
+    Explain clearly what the document is about in one short sentence.
 
-Document text:
-{context}
+    Be specific. Do NOT just say "document".
+    Use important details like names, amounts, or purpose.
 
-Question:
-{question}
+    Document text:
+    {context}
 
-Short answer:
-""".strip()
+    Question:
+    {question}
+
+    Answer:
+    """.strip()
 
     answer = generate_answer(tokenizer, model, prompt)
 
