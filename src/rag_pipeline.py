@@ -14,7 +14,7 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=60,
+        max_new_tokens=80,
         do_sample=False,
         repetition_penalty=1.25,
         no_repeat_ngram_size=3
