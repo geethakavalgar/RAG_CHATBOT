@@ -1,15 +1,11 @@
-SYSTEM_PROMPT = """
-You are a helpful assistant.
-Answer only from the provided context.
-If the answer is not in the context, say:
-The answer is not available in the uploaded documents.
-Keep the answer short and factual.
-""".strip()
-
-
 def build_prompt(context: str, question: str) -> str:
     return f"""
-{SYSTEM_PROMPT}
+Answer the question using the context below.
+
+IMPORTANT:
+- Do NOT copy the text directly
+- Write the answer in your own words
+- Keep it short
 
 Context:
 {context}
@@ -18,4 +14,4 @@ Question:
 {question}
 
 Answer:
-""".strip()
+"""
