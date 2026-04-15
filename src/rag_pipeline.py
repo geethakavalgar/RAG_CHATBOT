@@ -29,6 +29,7 @@ def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
     tokenizer, model = llm
     docs = vector_store.similarity_search(question, k=TOP_K)
     context = "\n\n".join(doc.page_content for doc in docs)
+    context = context[:800]
     prompt = build_prompt(context=context, question=question)
     answer = generate_answer(tokenizer, model, prompt)
     return answer, docs
