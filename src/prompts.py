@@ -1,19 +1,16 @@
-def build_prompt(context: str, question: str) -> str:
-    return f"""
-You are an AI assistant.
+prompt = f"""
+Look at the document text and answer the question.
 
-Your job is to READ the context and ANSWER the question.
+Explain clearly what the document is about in one short sentence.
 
-Rules:
-- Do NOT copy the context
-- Give a SHORT summary answer
-- Use your own words
+Be specific. Do NOT just say "document".
+Use important details like names, amounts, or purpose.
 
-Context:
+Document text:
 {context}
 
 Question:
 {question}
 
-Final Answer:
-"""
+Answer:
+""".strip()
