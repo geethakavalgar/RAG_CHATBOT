@@ -69,3 +69,6 @@ The uploaded PDF appears to be a receipt or payment-related document.
 
 ### Screenshot
 ![App Screenshot](assets/rag-demo.png)
+![App Screenshot](assets/rag-demo_1.png)
+![App Screenshot](assets/rag-demo_2.png)
+![App Screenshot](assets/rag-demo_3.png)
