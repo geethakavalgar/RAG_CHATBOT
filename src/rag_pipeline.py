@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from .config import TOP_K, MAX_NEW_TOKENS
+from .config import TOP_K
 from .utils import format_sources
 
 
@@ -14,9 +14,9 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
 
     outputs = model.generate(
         **inputs,
-        max_new_tokens=80,
+        max_new_tokens=60,
         do_sample=False,
-        repetition_penalty=1.2,
+        repetition_penalty=1.25,
         no_repeat_ngram_size=3
     )
 
@@ -27,16 +27,21 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
 def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
     tokenizer, model = llm
     docs = vector_store.similarity_search(question, k=TOP_K)
+
     context = "\n\n".join(doc.page_content for doc in docs)
-    context = context[:1000]
+    context = " ".join(context.split())
+    context = context[:700]
 
     prompt = f"""
-Answer the user's question using only the document text below.
+Read the document text and answer the question briefly.
 
-Rules:
-- Answer in 1 short sentence
-- Do not copy the document word-for-word
-- If the answer is unclear, give the best concise summary
+Instructions:
+- Answer in one short sentence.
+- Use your own words.
+- Do not repeat the document text.
+- Do not invent details.
+- If the question asks what the PDF is about, say what kind of document it is and its main purpose.
+- If the answer cannot be determined, say: The document content is unclear.
 
 Document text:
 {context}
@@ -44,10 +49,14 @@ Document text:
 Question:
 {question}
 
-Answer:
+Short answer:
 """.strip()
 
     answer = generate_answer(tokenizer, model, prompt)
+
+    if not answer or len(answer) < 5:
+        answer = "The document content is unclear."
+
     return answer, docs
 
 
