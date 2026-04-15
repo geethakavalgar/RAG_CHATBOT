@@ -58,3 +58,14 @@ docker run -p 8501:8501 rag-pdf-chatbot-pro
 
 ## Resume Bullet
 Developed a production-style RAG chatbot that ingests multiple PDFs, performs semantic retrieval using Sentence Transformers and FAISS, and generates grounded responses with source citations through a Streamlit interface.
+
+## Sample Results
+
+### Question
+What is the uploaded PDF about?
+
+### Answer
+The uploaded PDF appears to be a receipt or payment-related document.
+
+### Screenshot
+![App Screenshot](assets/rag-demo.mov)
