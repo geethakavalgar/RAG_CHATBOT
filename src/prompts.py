@@ -1,11 +1,13 @@
 def build_prompt(context: str, question: str) -> str:
     return f"""
-Answer the question using the context below.
+You are an AI assistant.
 
-IMPORTANT:
-- Do NOT copy the text directly
-- Write the answer in your own words
-- Keep it short
+Your job is to READ the context and ANSWER the question.
+
+Rules:
+- Do NOT copy the context
+- Give a SHORT summary answer
+- Use your own words
 
 Context:
 {context}
@@ -13,5 +15,5 @@ Context:
 Question:
 {question}
 
-Answer:
+Final Answer:
 """
