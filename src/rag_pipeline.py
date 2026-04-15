@@ -8,7 +8,7 @@ def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
     docs = vector_store.similarity_search(question, k=TOP_K)
     context = "\n\n".join(doc.page_content for doc in docs)
     prompt = build_prompt(context=context, question=question)
-    answer = llm.invoke(prompt)
+    answer = llm.invoke(prompt).strip()
     return answer, docs
 
 def render_answer_with_sources(answer: str, docs: List) -> str:
