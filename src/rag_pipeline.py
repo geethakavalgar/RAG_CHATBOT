@@ -24,16 +24,31 @@ def generate_answer(tokenizer, model, prompt: str) -> str:
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
     return answer
 
-
-def answer_question(vector_store, llm, question: str) -> Tuple[str, List]:
-    tokenizer, model = llm
-    docs = vector_store.similarity_search(question, k=TOP_K)
+def answer_question(vector_store, llm, question):
+    docs = vector_store.similarity_search(question, k=3)
     context = "\n\n".join(doc.page_content for doc in docs)
     context = context[:800]
-    prompt = build_prompt(context=context, question=question)
-    answer = generate_answer(tokenizer, model, prompt)
+
+    # Special handling for "what is this about"
+    if "what is" in question.lower() and "pdf" in question.lower():
+        answer = summarize_context(context)
+    else:
+        answer = summarize_context(context)
+
     return answer, docs
 
+def summarize_context(context: str) -> str:
+    lines = context.split("\n")
 
+    # pick important-looking lines
+    important = []
+    for line in lines:
+        line = line.strip()
+        if len(line) > 20:
+            important.append(line)
+
+    # return first 2–3 meaningful lines
+    return " ".join(important[:3])
+    
 def render_answer_with_sources(answer: str, docs: List) -> str:
     return f"{answer}\n\nSources:\n{format_sources(docs)}"
