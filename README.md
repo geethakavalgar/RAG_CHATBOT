@@ -68,4 +68,4 @@ What is the uploaded PDF about?
 The uploaded PDF appears to be a receipt or payment-related document.
 
 ### Screenshot
-![App Screenshot](assets/rag-demo.mov)
+![App Screenshot](assets/rag-demo.png)
